@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_mnist/pages/upload-page.dart';
+import 'package:hello_mnist/pages/drawing-page.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   List tabs = [
     UploadImage(),
-    Center(child: Text("Drawing page"))
+    DrawPage()
   ];
 
   @override
@@ -41,10 +42,12 @@ class _HomeState extends State<Home> {
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey[400],
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.image),
-          label: "Image"),
-          BottomNavigationBarItem(icon: Icon(Icons.album),
-          label: "Draw")
+          BottomNavigationBarItem(
+              icon: Icon(Icons.image),
+              label: "Image"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.album),
+              label: "Draw")
         ],
           onTap: (index) {
           setState(() {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:hello_mnist/dl_model/classifier.dart';
 
 class UploadImage extends StatefulWidget {
   @override
@@ -7,17 +9,25 @@ class UploadImage extends StatefulWidget {
 }
 
 class _UploadImageState extends State<UploadImage> {
-  ImagePicker picker = ImagePicker();
-
+  final picker = ImagePicker(); //final makes sure that it is now dynamically typed
+  PickedFile image;
+  Classifier classifier = Classifier();
+  int digit = -1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //parent widget
       backgroundColor: Colors.grey[200],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           //when pressed what happens, i.e launch image picker
+          image = await picker.getImage(source: ImageSource.gallery);
+          // digit = 1;
+          //we made it an asynchronous function, so the app waits for
+          // user to pick the file and then assign it, using 'await' keyword
 
+          digit = await classifier.classifyImage(image);
+          setState(() {}); //image is set as, to show in box above
         },
         backgroundColor: Colors.orange,
         child: Icon(Icons.camera),
@@ -37,13 +47,19 @@ class _UploadImageState extends State<UploadImage> {
                 width: 300,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 2)
+                  border: Border.all(color: Colors.black, width: 2),
+                  image:  DecorationImage(
+                      image: digit == -1 ?
+                      AssetImage("assets/white.png") : FileImage(File(image.path)),
+                  )
                 ),
               ),
               SizedBox(height: 45),
               Text("Current Prediction", style:
                 TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-              Text("5", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold)),
+              Text(
+              digit == -1? "" : "$digit",
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
